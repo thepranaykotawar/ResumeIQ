@@ -1,170 +1,538 @@
-# Resume IQ Pro
+# ResumeIQ
 
-Project Overview
+> **Upload your resume. Get an ATS score. Optimize it. Find matching jobs.**
 
-Build a minimalistic, professional web application called "ResumeIQ" (feel free to suggest a better name) that helps job seekers create ATS-optimized resumes and discover matching job openings. The product has three core pillars:
+ResumeIQ is an AI-powered resume optimization and job-matching platform designed to help job seekers create **ATS-friendly, professional resumes** and discover relevant job opportunities.
 
-ATS Resume Checker — upload an existing resume and get an ATS compatibility score with actionable feedback.
+Instead of being another resume-template marketplace, ResumeIQ focuses on a fast, practical workflow:
 
-AI Resume Optimizer — automatically rewrite/reformat the resume into an ATS-friendly version, downloadable as PDF/DOCX.
+**Upload → Analyze → Optimize → Match**
 
-Job Matcher — based on the parsed resume (skills, title, experience level), surface relevant job vacancies.
+---
 
-Target users: job seekers of all experience levels who want a fast, no-fluff tool — not a bloated resume-template marketplace.
+## 🚀 Features
 
-Tech Stack
+### 📄 ATS Resume Checker
 
-Frontend: React (with TypeScript), Tailwind CSS
+Upload an existing resume in **PDF or DOCX** format and receive an ATS compatibility score from **0–100**.
 
-Backend/DB: Supabase (Auth, Postgres, Storage for resume files)
+The analysis evaluates:
 
-AI layer: Claude API (via Anthropic) for resume parsing, ATS scoring logic, and resume rewriting
+* Formatting compatibility
+* Keyword usage
+* Contact information
+* Resume section structure
+* Readability and length
+* Bullet-point quality
+* Quantified achievements
+* ATS-unfriendly elements such as tables, columns, graphics, and text boxes
 
-Job search: integrate a job search API (e.g., Adzuna, JSearch/RapidAPI, or Remotive) via edge functions — do not scrape job boards directly
+Each detected issue includes:
 
-File handling: support .pdf and .docx upload/parsing and .pdf/.docx export
+* **What is wrong**
+* **Why it matters**
+* **How to fix it**
 
-Design Guidelines
+---
 
-Minimalistic, professional, "productivity tool" aesthetic — think Linear / Notion, not a flashy template gallery
+### 🤖 AI Resume Optimizer
 
-Neutral color palette: off-white/light gray background, one confident accent color (deep navy, forest green, or charcoal — pick one and use it consistently for CTAs and score indicators)
+Use AI to improve your resume while keeping the user in control.
 
-Generous white space, clear typographic hierarchy, no more than 2 font families
+ResumeIQ can:
 
-Avoid stock "resume builder" clichés (no cartoon illustrations, no rainbow gradients)
+* Rewrite weak bullet points
+* Improve professional language
+* Add relevant keywords
+* Improve achievement-focused writing
+* Reorganize resume sections
+* Convert content into ATS-friendly formatting
+* Generate optimized resume versions
 
-Fully responsive, mobile-first where reasonable, but this is primarily a desktop/laptop workflow tool
+Users can compare the **original vs. optimized resume** and edit the AI-generated content before exporting.
 
-Dark mode optional (nice-to-have, not required for v1)
+> AI suggestions never automatically replace the original resume.
 
-Core Features & Pages
+---
 
-1. Landing Page
+### 🎯 Job Matcher
 
-Clear value proposition: "Upload your resume. Get an ATS score. Get matched to jobs."
+ResumeIQ analyzes the user's:
 
-Simple 3-step visual (Upload → Analyze → Match)
+* Skills
+* Job titles
+* Experience level
+* Resume keywords
 
-Single primary CTA: "Check My Resume"
+It then searches supported job-search APIs and displays relevant job openings.
 
-No pricing complexity for v1 — assume free tier only
+Each job listing includes:
 
-2. Auth
+* Job title
+* Company
+* Location
+* Remote / Hybrid / On-site status
+* Match percentage
+* Job description
+* Original application link
 
-Email/password + Google OAuth via Supabase Auth
+Users can also select a specific job and **tailor their resume analysis against that job description**.
 
-Users must be logged in to save resumes and view history; allow one free anonymous check before requiring signup (soft paywall)
+---
 
-3. Resume Upload & Parsing
+### 📊 Resume Dashboard
 
-Drag-and-drop upload (.pdf, .docx)
+Users can manage their previous resumes from a centralized dashboard.
 
-Parse resume text and structure it into sections: Contact Info, Summary, Skills, Experience, Education, Certifications
+Dashboard features include:
 
-Show a loading state with clear progress steps ("Reading document…", "Extracting sections…", "Scoring against ATS rules…")
+* Previously uploaded resumes
+* ATS scores
+* Analysis dates
+* Re-run analysis
+* Download optimized resumes
+* Resume history
+* Delete resume records
 
-4. ATS Score Report (this is the core screen — invest the most design effort here)
+---
 
-Overall ATS score (0–100) displayed prominently, e.g., a circular score gauge
+## ✨ User Workflow
 
-Breakdown by category, each with its own sub-score and short explanation:
+```text
+┌─────────────┐
+│ Upload CV   │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ AI Analysis │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ ATS Score   │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Optimize CV │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Match Jobs  │
+└─────────────┘
+```
 
-Formatting (tables/columns/graphics that confuse parsers, use of standard section headers, file type)
+---
 
-Keyword match (if a job description is pasted/selected, compare against it; otherwise compare against general role-based keyword benchmarks)
+## 🖥️ Core Pages
 
-Contact info completeness
+### Landing Page
 
-Section structure (missing sections, non-standard ordering)
+A simple product-focused landing page with:
 
-Readability/length (word count, bullet density, passive voice usage)
+* ResumeIQ branding
+* Clear value proposition
+* Upload → Analyze → Match workflow
+* Primary CTA: **Check My Resume**
+* Minimal, professional design
 
-Quantified impact (percentage of bullet points with measurable results)
+### Authentication
 
-Each issue found should list: what's wrong, why it matters for ATS parsing, and a one-line fix suggestion
+Authentication is handled through Supabase.
 
-Optional: paste a target job description to get a tailored keyword-match score against that specific posting
+Supported methods:
 
-5. AI Resume Rewrite / Optimizer
+* Email & Password
+* Google OAuth
 
-"Fix My Resume" button that generates an ATS-optimized version using the Claude API
+Users can perform one free anonymous resume check before being asked to create an account.
 
-Show a side-by-side or before/after diff view of original vs. optimized content
+### Resume Upload
 
-Let users edit the AI-generated content inline before finalizing (never force a blind auto-replace)
+Supported formats:
 
-Export as clean, ATS-safe .pdf and .docx (single column, standard fonts, no tables/text boxes/images in the exported file)
+* `.pdf`
+* `.docx`
 
-Maintain 2–3 professional, ATS-safe formatting templates the user can pick from (not decorative templates — structural ones: chronological, skills-first, hybrid)
+The upload flow provides clear progress feedback:
 
-6. Job Matcher
+```text
+Reading document...
+       ↓
+Extracting sections...
+       ↓
+Analyzing resume...
+       ↓
+Scoring ATS compatibility...
+       ↓
+Generating report...
+```
 
-Based on parsed skills, job titles, and experience level, query the job search API and display a list of matching openings
+### ATS Report
 
-Each job card: title, company, location, remote/hybrid/onsite tag, and a "match %" relative to the user's resume
+The ATS report provides an overall score along with category-level scores.
 
-Filters: location, remote-only, experience level, date posted
+Example:
 
-Clicking a job shows the full description and a "Tailor resume for this job" action that re-runs the ATS keyword match against that specific posting
+| Category              |      Score |
+| --------------------- | ---------: |
+| Formatting            |         92 |
+| Keywords              |         78 |
+| Contact Information   |        100 |
+| Section Structure     |         95 |
+| Readability           |         88 |
+| Quantified Impact     |         72 |
+| **Overall ATS Score** | **87/100** |
 
-Link out to the original job posting (do not attempt to host applications)
+---
 
-7. Dashboard / History
+## 🛠️ Tech Stack
 
-List of previously uploaded resumes with their scores and dates
+### Frontend
 
-Ability to re-run analysis, download past optimized versions, or delete records
+* **React**
+* **TypeScript**
+* **Tailwind CSS**
 
-Data & Backend Notes
+### Backend
 
-Store uploaded resumes in Supabase Storage; store parsed structured data + scores in Postgres tables (resumes, ats_scores, job_matches)
+* **Supabase**
 
-All AI calls (parsing, scoring, rewriting) should go through Supabase Edge Functions — never call the Claude API directly from the client, to protect API keys
+  * Authentication
+  * PostgreSQL
+  * Storage
+  * Edge Functions
 
-Rate-limit free-tier usage (e.g., 3 resume checks/month) with a clear upgrade prompt placeholder (no need to build real billing yet — just the UI hook)
+### AI
 
-Explicit Non-Goals for v1
+* **Anthropic Claude API**
 
-No resume builder-from-scratch wizard (focus is upload + optimize, not blank-template filling)
+Claude is used for:
 
-No in-app job applications/autofill
+* Resume parsing
+* Resume analysis
+* ATS scoring
+* Resume rewriting
+* Job-specific keyword analysis
 
-No collaborative/team features
+All AI requests are routed through **Supabase Edge Functions** to keep API credentials secure.
 
-No payment processing yet — just UI placeholders for a future paid tier
+### Job Search
 
-Deliverable Priorities (build in this order)
+ResumeIQ is designed to integrate with job-search APIs such as:
 
-Auth + landing page
+* Adzuna
+* JSearch / RapidAPI
+* Remotive
 
-Resume upload + parsing + ATS score report
+Job boards are **not scraped directly**.
 
-AI resume rewrite/export
+---
 
-Job matcher integration
+## 🗄️ Database Structure
 
-Dashboard/history
+The application stores resume-related information in Supabase PostgreSQL.
 
-Keep the UI clean and functional at every step rather than polishing one screen extensively before others exist.
+Core entities include:
 
-This project was built with [Lovable](https://lovable.dev).
+```text
+users
+  │
+  └── resumes
+        │
+        ├── ats_scores
+        │
+        ├── optimized_versions
+        │
+        └── job_matches
+```
 
-## Build with Lovable
+Resume files are stored securely using **Supabase Storage**, while parsed resume data and analysis results are stored in PostgreSQL.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/90f57deb-08e2-4e91-a1be-1c56a6b7dd00).
+---
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## 🔐 Security
 
-## Development
+ResumeIQ is designed with user data and API security in mind.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+* Authentication handled by Supabase Auth
+* Resume files stored in Supabase Storage
+* AI API keys are never exposed to the frontend
+* Claude API requests run through Edge Functions
+* Database access can be protected using Row Level Security
+* Usage can be rate-limited for free users
 
-```sh
-git clone <this-repository-url>
+---
+
+## 📤 Resume Export
+
+Optimized resumes can be exported as:
+
+* PDF
+* DOCX
+
+Exported resumes follow ATS-safe formatting principles:
+
+* Single-column layout
+* Standard fonts
+* Clear section headings
+* No unnecessary graphics
+* No tables
+* No text boxes
+* No decorative elements that can confuse ATS parsers
+
+Users can choose from three structural resume formats:
+
+1. **Chronological**
+2. **Skills-First**
+3. **Hybrid**
+
+---
+
+## 📱 Responsive Design
+
+ResumeIQ follows a **desktop-first productivity-tool experience** while remaining responsive across:
+
+* Desktop
+* Laptop
+* Tablet
+* Mobile
+
+The design avoids the typical resume-builder aesthetic and instead focuses on:
+
+* Generous whitespace
+* Clear typography
+* Neutral backgrounds
+* Strong visual hierarchy
+* Minimal UI
+* One consistent accent color
+
+The overall design direction is inspired by productivity products such as **Linear and Notion**.
+
+---
+
+## 💳 Free Tier
+
+The initial version is free to use with usage limits.
+
+Example:
+
+```text
+3 resume checks / month
+```
+
+When the limit is reached, the application can display an upgrade prompt.
+
+> Payment processing and subscriptions are intentionally not included in v1.
+
+---
+
+## 🎯 Project Goals
+
+ResumeIQ aims to solve three common problems faced by job seekers:
+
+### 1. "Is my resume ATS-friendly?"
+
+ResumeIQ provides an understandable ATS score and actionable recommendations.
+
+### 2. "How can I improve my resume?"
+
+The AI optimizer helps rewrite and restructure resume content without removing user control.
+
+### 3. "Which jobs should I apply for?"
+
+The Job Matcher uses resume information to surface relevant job opportunities.
+
+---
+
+## 🚫 Non-Goals for v1
+
+ResumeIQ intentionally does **not** include:
+
+* Resume creation from a blank page
+* Large template marketplaces
+* In-app job applications
+* Automatic application submission
+* Autofill bots
+* Collaborative/team features
+* Payment processing
+* Direct job-board scraping
+
+The focus remains on:
+
+**Analyze → Improve → Match**
+
+---
+
+## 📂 Project Structure
+
+A typical frontend structure:
+
+```text
+src/
+├── components/
+├── pages/
+├── layouts/
+├── hooks/
+├── services/
+├── lib/
+├── types/
+└── App.tsx
+
+supabase/
+└── functions/
+    ├── parse-resume/
+    ├── analyze-resume/
+    ├── optimize-resume/
+    └── job-matcher/
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+Make sure you have:
+
+* Node.js
+* npm
+* A Supabase project
+* Anthropic API credentials
+* Job Search API credentials
+
+### Clone the repository
+
+```bash
+git clone <your-repository-url>
 cd <repository-name>
-npm i
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure environment variables
+
+Create a `.env` file and configure the required Supabase and API environment variables.
+
+> Never commit API keys or secrets to GitHub.
+
+### Start the development server
+
+```bash
 npm run dev
 ```
+
+The application will be available through the local development URL shown in your terminal.
+
+---
+
+## 🌐 Lovable
+
+This project was initially built with **Lovable** and can continue to be developed through the Lovable editor.
+
+[Open ResumeIQ in Lovable](https://lovable.dev/projects/90f57deb-08e2-4e91-a1be-1c56a6b7dd00?utm_source=chatgpt.com)
+
+Lovable provides:
+
+* Rapid development
+* GitHub synchronization
+* Editable source code
+* Continuous project development
+
+---
+
+## 🗺️ Development Roadmap
+
+### Phase 1 — Foundation
+
+* [x] Landing page
+* [ ] Supabase authentication
+* [ ] Google OAuth
+* [ ] Resume upload
+* [ ] Basic database structure
+
+### Phase 2 — ATS Analysis
+
+* [ ] PDF parsing
+* [ ] DOCX parsing
+* [ ] Resume section extraction
+* [ ] ATS scoring engine
+* [ ] ATS report UI
+* [ ] Job-description keyword comparison
+
+### Phase 3 — AI Optimization
+
+* [ ] Claude API integration
+* [ ] Resume rewriting
+* [ ] Before/after comparison
+* [ ] Inline editing
+* [ ] PDF export
+* [ ] DOCX export
+* [ ] ATS-safe templates
+
+### Phase 4 — Job Matcher
+
+* [ ] Job API integration
+* [ ] Resume-to-job matching
+* [ ] Match percentage
+* [ ] Job filters
+* [ ] Job detail page
+* [ ] Job-specific resume tailoring
+
+### Phase 5 — Dashboard
+
+* [ ] Resume history
+* [ ] Previous ATS reports
+* [ ] Optimized resume downloads
+* [ ] Re-analysis
+* [ ] Delete resume
+* [ ] Usage tracking
+
+---
+
+## 🔮 Future Improvements
+
+Potential features for future versions:
+
+* Job application tracking
+* LinkedIn profile optimization
+* Cover letter generation
+* Interview preparation
+* Salary insights
+* Personalized career recommendations
+* Multiple resume versions for different job roles
+* Advanced job matching
+* Premium plans
+* Resume analytics
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+If you find a bug or have an idea for a feature, feel free to open an issue or submit a pull request.
+
+---
+
+## 📄 License
+
+This project is currently intended as a personal/portfolio project.
+
+Add an appropriate open-source license if the project is later released for public contribution.
+
+---
+
+## 👨‍💻 Author
+
+**Pranay Kotawar**
+
+Built as an AI-powered productivity tool for modern job seekers.
+
+---
+
+### ⭐ ResumeIQ
+
+**Upload your resume. Analyze it. Improve it. Find your next opportunity.**
